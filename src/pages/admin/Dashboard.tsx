@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Header from '@/components/common/Header';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
   const { signOut, user } = useAuth();
@@ -32,10 +33,24 @@ const Dashboard: React.FC = () => {
             <p className="text-sm text-gray-600">You are logged in as an administrator</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <DashboardCard title="Inspections" count={0} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <Link to="/admin/pending-registrations" className="no-underline">
+              <DashboardCard title="Pending Registrations" count={0} highlight />
+            </Link>
             <DashboardCard title="Users" count={0} />
             <DashboardCard title="Reports" count={0} />
+          </div>
+          
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <h2 className="text-xl font-semibold mb-4">Administrative Actions</h2>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                to="/admin/pending-registrations"
+                className="bg-[#FE623F] text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors inline-flex items-center"
+              >
+                Review Registration Requests
+              </Link>
+            </div>
           </div>
         </div>
       </main>
@@ -46,11 +61,12 @@ const Dashboard: React.FC = () => {
 interface DashboardCardProps {
   title: string;
   count: number;
+  highlight?: boolean;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ title, count }) => (
-  <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-    <h3 className="text-lg font-semibold">{title}</h3>
+const DashboardCard: React.FC<DashboardCardProps> = ({ title, count, highlight = false }) => (
+  <div className={`bg-white border ${highlight ? 'border-[#FE623F]' : 'border-gray-200'} rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow`}>
+    <h3 className={`text-lg font-semibold ${highlight ? 'text-[#FE623F]' : ''}`}>{title}</h3>
     <p className="text-3xl font-bold mt-2">{count}</p>
     <p className="text-sm text-gray-500 mt-2">Total {title.toLowerCase()}</p>
   </div>

@@ -9,7 +9,11 @@ import { toast } from 'sonner';
 interface Profile {
   id: string;
   email: string;
+  first_name: string;
+  middle_name: string | null;
+  last_name: string;
   is_admin: boolean;
+  password_changed: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -19,6 +23,7 @@ type AuthContextType = {
   session: Session | null;
   isLoading: boolean;
   isAdmin: boolean;
+  isPasswordChanged: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -30,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isPasswordChanged, setIsPasswordChanged] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,24 +53,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (session?.user) {
         try {
-          // Check if user is admin
+          // Check user profile data
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('is_admin')
+            .select('is_admin, password_changed')
             .eq('id', session.user.id)
             .single();
           
           if (profileError) {
             console.error('Error fetching profile:', profileError);
             setIsAdmin(false);
+            setIsPasswordChanged(true);
           } else if (profile) {
             setIsAdmin(profile.is_admin || false);
+            setIsPasswordChanged(profile.password_changed !== false);
           } else {
             setIsAdmin(false);
+            setIsPasswordChanged(true);
           }
         } catch (err) {
-          console.error('Error checking admin status:', err);
+          console.error('Error checking user status:', err);
           setIsAdmin(false);
+          setIsPasswordChanged(true);
         }
       }
       
@@ -78,24 +88,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        // Check if user is admin when auth state changes
+        // Check user profile when auth state changes
         supabase
           .from('profiles')
-          .select('is_admin')
+          .select('is_admin, password_changed')
           .eq('id', session.user.id)
           .single()
           .then(({ data, error }) => {
             if (error) {
               console.error('Error fetching profile:', error);
               setIsAdmin(false);
+              setIsPasswordChanged(true);
             } else if (data) {
               setIsAdmin(data.is_admin || false);
+              setIsPasswordChanged(data.password_changed !== false);
             } else {
               setIsAdmin(false);
+              setIsPasswordChanged(true);
             }
           });
       } else {
         setIsAdmin(false);
+        setIsPasswordChanged(true);
       }
     });
 
@@ -116,24 +130,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      // Check if user is admin after successful login
+      // Check if user exists in profiles and get their details
       const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('is_admin')
-        .eq('email', email)
+        .from("profiles")
+        .select("is_admin, password_changed")
+        .eq("email", email)
         .single();
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
-        toast.error('Error verifying admin status');
+        toast.error('Error verifying user status');
         return;
       }
 
+      // Check if password needs to be changed
+      if (profile && profile.password_changed === false) {
+        toast.info('Please set a new password');
+        navigate('/change-password');
+        return;
+      }
+
+      // Navigate based on admin status
       if (profile && profile.is_admin) {
         toast.success('Successfully signed in as admin');
         navigate('/admin/dashboard');
       } else {
-        toast.info('Signed in successfully');
+        toast.success('Signed in successfully');
+        navigate('/dashboard');
       }
     } catch (error: any) {
       console.error('Error signing in:', error);
@@ -162,6 +185,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     session,
     isLoading,
     isAdmin,
+    isPasswordChanged,
     signIn,
     signOut,
   };
