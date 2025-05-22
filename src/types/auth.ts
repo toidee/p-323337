@@ -5,7 +5,7 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  full_name?: string;  // Added for compatibility with existing code
+  full_name?: string;  
   role: UserRole;
   position?: string;
   date_joined?: string;
@@ -15,6 +15,10 @@ export interface User {
     start?: string;
     end?: string;
   };
+  // Added new fields from our SQL migration
+  is_admin?: boolean;
+  password_changed?: boolean;
+  email_verified?: boolean;
 }
 
 export interface AuthContextType {
@@ -24,5 +28,5 @@ export interface AuthContextType {
   logout: () => void;
   isLoading: boolean;
   error: string | null;
-  updateUser?: (user: User) => Promise<void>; // Added updateUser function
+  updateUser?: (user: User) => Promise<void>;
 }

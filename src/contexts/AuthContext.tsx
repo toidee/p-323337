@@ -55,7 +55,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 date_joined: profile.date_joined,
                 status: profile.status,
                 duty_status: profile.duty_status,
-                availability_period: availabilityPeriod
+                availability_period: availabilityPeriod,
+                is_admin: profile.is_admin || false,
+                password_changed: profile.password_changed || false,
+                email_verified: profile.email_verified || false
               });
             }
           }, 0);
@@ -103,7 +106,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 date_joined: profile.date_joined,
                 status: profile.status,
                 duty_status: profile.duty_status,
-                availability_period: availabilityPeriod
+                availability_period: availabilityPeriod,
+                is_admin: profile.is_admin || false,
+                password_changed: profile.password_changed || false,
+                email_verified: profile.email_verified || false
               });
             }
             setIsLoading(false);
@@ -140,7 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Check if user has the correct role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, is_admin, password_changed')
         .eq('id', data.user.id)
         .single();
 
@@ -176,6 +182,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           data: {
             full_name: fullName,
             role: role,
+            is_admin: false,
+            password_changed: true,
           },
         },
       });
@@ -225,7 +233,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           position: updatedUser.position,
           duty_status: updatedUser.duty_status,
           availability_period: updatedUser.availability_period,
-          status: updatedUser.status
+          status: updatedUser.status,
+          is_admin: updatedUser.is_admin,
+          password_changed: updatedUser.password_changed,
+          email_verified: updatedUser.email_verified
         })
         .eq('id', updatedUser.id);
       

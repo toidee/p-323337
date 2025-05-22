@@ -267,8 +267,12 @@ export type Database = {
           date_joined: string
           duty_hours_log: Json | null
           duty_status: boolean | null
+          email: string | null
+          email_verified: boolean | null
           full_name: string
           id: string
+          is_admin: boolean | null
+          password_changed: boolean | null
           position: string | null
           role: string
           status: string | null
@@ -278,8 +282,12 @@ export type Database = {
           date_joined?: string
           duty_hours_log?: Json | null
           duty_status?: boolean | null
+          email?: string | null
+          email_verified?: boolean | null
           full_name: string
           id: string
+          is_admin?: boolean | null
+          password_changed?: boolean | null
           position?: string | null
           role: string
           status?: string | null
@@ -289,8 +297,12 @@ export type Database = {
           date_joined?: string
           duty_hours_log?: Json | null
           duty_status?: boolean | null
+          email?: string | null
+          email_verified?: boolean | null
           full_name?: string
           id?: string
+          is_admin?: boolean | null
+          password_changed?: boolean | null
           position?: string | null
           role?: string
           status?: string | null
