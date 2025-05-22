@@ -110,60 +110,60 @@ export type Database = {
       establishments: {
         Row: {
           active_status: string | null
-          address: string
+          address: string | null
           date_registered: string | null
-          dti_number: string
+          dti_number: string | null
           form_data: Json | null
           id: string
           latitude: number | null
           longitude: number | null
-          name: string
-          num_occupants: number
-          num_storeys: number
-          occupancy_type: string
+          name: string | null
+          num_occupants: number | null
+          num_storeys: number | null
+          occupancy_type: string | null
           owner_id: string | null
           rejection_history: Json | null
-          status: string
-          total_floor_area: number
-          type: string
+          status: string | null
+          total_floor_area: number | null
+          type: string | null
         }
         Insert: {
           active_status?: string | null
-          address: string
+          address?: string | null
           date_registered?: string | null
-          dti_number: string
+          dti_number?: string | null
           form_data?: Json | null
           id?: string
           latitude?: number | null
           longitude?: number | null
-          name: string
-          num_occupants: number
-          num_storeys: number
-          occupancy_type: string
+          name?: string | null
+          num_occupants?: number | null
+          num_storeys?: number | null
+          occupancy_type?: string | null
           owner_id?: string | null
           rejection_history?: Json | null
-          status: string
-          total_floor_area: number
-          type: string
+          status?: string | null
+          total_floor_area?: number | null
+          type?: string | null
         }
         Update: {
           active_status?: string | null
-          address?: string
+          address?: string | null
           date_registered?: string | null
-          dti_number?: string
+          dti_number?: string | null
           form_data?: Json | null
           id?: string
           latitude?: number | null
           longitude?: number | null
-          name?: string
-          num_occupants?: number
-          num_storeys?: number
-          occupancy_type?: string
+          name?: string | null
+          num_occupants?: number | null
+          num_storeys?: number | null
+          occupancy_type?: string | null
           owner_id?: string | null
           rejection_history?: Json | null
-          status?: string
-          total_floor_area?: number
-          type?: string
+          status?: string | null
+          total_floor_area?: number | null
+          type?: string | null
         }
         Relationships: [
           {
