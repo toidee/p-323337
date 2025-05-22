@@ -19,6 +19,7 @@ export interface User {
   is_admin?: boolean;
   password_changed?: boolean;
   email_verified?: boolean;
+  email_confirmed_at?: string;
 }
 
 export interface AuthContextType {
